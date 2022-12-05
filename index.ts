@@ -1,5 +1,5 @@
 import yargs from 'yargs'
-import { Challenge } from './types'
+import { Base, Challenge,  } from './types'
 import { readFile, access, writeFile } from 'node:fs/promises'
 
 const now = new Date()
@@ -64,22 +64,53 @@ async function getInput() {
 }
 const input = await getInput()
 
-const runInChain = (name: string, challenge: Challenge) => {
-    console.log(`${name}:`)
-    let passed = true
-    challenge.tests.forEach(test => {
-        const result = challenge.code(test[0])
-        if (result == test[1]) console.log(`  ✅ ${result} == ${test[1]}`)
-        else console.log(`  ❌ ${result} != ${test[1]}`), passed = false
-    })
-    if (passed) console.log(`
-${challenge.code(input)}
-`)
+function doStuff([func,input,output]: [Challenge,string,any]): [boolean,string] {
+    const result = func(input)
+    if (result == output) return [false, `✅ ${func.name}(input) == ${output}`]
+    else return [true, `❌ ${func.name}(input) != ${output}`]
 }
 
+let newTest: {
+    [key: string]:  | (() => ReturnType<typeof doStuff> | (() => any))[]
+} = {}
+
 if (!args.watch) {
-    const base: {
-        [key: string]: Challenge
-    } = await import(`./${args.year.toString().substring(2)}/${args.day}.ts`)
-    Promise.all(Object.entries(base).map(challenge => runInChain(challenge[0],challenge[1])))
+    const base: Base = await import(`./${args.year.toString().substring(2)}/${args.day}.ts`)
+    
+    if (base.tests) {
+        base.tests.forEach(([func,input,output]) => {
+            if (Array.isArray(func)) func.forEach(subFun => {
+                if (!newTest[subFun.name]) newTest[subFun.name] = []
+                newTest[subFun.name].push(() => doStuff([subFun,input,output]))
+        })
+            else  {
+                if (!newTest[func.name]) newTest[func.name] = []
+                newTest[func.name].push(() => doStuff([func,input,output]))
+            }
+        })
+    }
+    
+    Object.entries(base).forEach(([k,v]) => {
+        if (k == 'tests') return
+        if (!newTest[k]) newTest[k] = []
+        newTest[k].push(() => v(input))
+    })
 }
+
+Promise.all(Object.entries(newTest).map(([k,v]) => {
+    let failed = false
+    console.log(`${k}:`)
+    v.forEach(fn => {
+        const res = fn()
+        if (failed) {
+            console.log(`   ⚠️ Stopped`)
+            return
+        }
+        if (typeof res == 'object') {
+            failed = res[0]
+            console.log(`   ${res[1]}`)
+        } else {
+            console.log(res)
+        }
+    })
+}))
