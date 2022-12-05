@@ -1,6 +1,7 @@
 import yargs from 'yargs'
 import { Base, Challenge,  } from './types'
-import { readFile, access, writeFile } from 'node:fs/promises'
+import { readFile, access, writeFile, copyFile } from 'node:fs/promises'
+import c from 'picocolors'
 
 const now = new Date()
 
@@ -66,8 +67,11 @@ const input = await getInput()
 
 function doStuff([func,input,output]: [Challenge,string,any]): [boolean,string] {
     const result = func(input)
-    if (result == output) return [false, `✅ ${func.name}(input) == ${output}`]
-    else return [true, `❌ ${func.name}(input) != ${output}`]
+    const short = input.split('\n')
+    let newInput = short[0]
+    if (short.length > 1) newInput = `${short[0]}...${short.length}`
+    if (result == output) return [false, `✅ ${func.name}(${newInput}) == ${output}`]
+    else return [true, `❌ ${func.name}(${newInput}) != ${output}, == ${result}`]
 }
 
 let newTest: {
@@ -75,7 +79,9 @@ let newTest: {
 } = {}
 
 if (!args.watch) {
-    const base: Base = await import(`./${args.year.toString().substring(2)}/${args.day}.ts`)
+    const path = `./${args.year.toString().substring(2)}/${args.day}.ts`
+    if (!await fileExists(path)) await copyFile('./template.ts', path)
+    const base: Base = await import(path)
     
     if (base.tests) {
         base.tests.forEach(([func,input,output]) => {
@@ -90,10 +96,10 @@ if (!args.watch) {
         })
     }
     
-    Object.entries(base).forEach(([k,v]) => {
+    if(!args.long) Object.entries(base).forEach(([k,v]) => {
         if (k == 'tests') return
         if (!newTest[k]) newTest[k] = []
-        newTest[k].push(() => v(input))
+        newTest[k].push(() => v(input.trim()))
     })
 }
 
@@ -101,6 +107,7 @@ Promise.all(Object.entries(newTest).map(([k,v]) => {
     let failed = false
     console.log(`${k}:`)
     v.forEach(fn => {
+        const tnow = performance.now()
         const res = fn()
         if (failed) {
             console.log(`   ⚠️ Stopped`)
@@ -108,7 +115,7 @@ Promise.all(Object.entries(newTest).map(([k,v]) => {
         }
         if (typeof res == 'object') {
             failed = res[0]
-            console.log(`   ${res[1]}`)
+            console.log(`   ${res[1]} ${c.gray(performance.now()-tnow)}`)
         } else {
             console.log(res)
         }
