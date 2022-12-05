@@ -46,7 +46,31 @@ export const one: Challenge = (input) => {
     },0)
 }
 
-export const two: Challenge = (input) => undefined
+const shapes = {
+    "Rock": ['Scissors','Paper'],
+    "Paper": ['Rock','Scissors'],
+    "Scissors": ['Paper','Rock']
+}
+
+enum My2 {
+    X = Points.Loss,
+    Y = Points.Tie,
+    Z = Points.Win
+}
+
+export const two: Challenge = (input) => {
+    const games = input.split('\n').map(game => {
+        const usThem = game.split(' ')
+        return [States[Opp[usThem[0]]],My2[usThem[1]]]
+    })
+    return games.reduce((pre,[opp,my]) => {
+        pre = pre + my
+        if (my == Points.Loss) pre = pre + States[shapes[opp][0]]
+        else if (my == Points.Win) pre = pre + States[shapes[opp][1]]
+        else pre = pre + States[opp]
+        return pre
+    },0)
+}
 
 export const tests: Tests = [
     [one, sample, 15],
