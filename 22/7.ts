@@ -48,16 +48,7 @@ function crawlAndUpdateI(baseObj: File) {
     return baseObj.i
 }
 
-function crawlAndSumI(baseObj: File) {
-    let i = 0;
-    i += baseObj.i < 100000 ? baseObj.i : 0
-    Object.values(baseObj.children).forEach(child => {
-        if (child.children) i += crawlAndSumI(child)
-    })
-    return i
-}
-
-export const one: Challenge = (input) => {
+function genTree(input) {
     const flat = input.split('$ ')
         .map(command => command.split('\n'))
         .map(command => [command.splice(0, 1)[0].split(' '), command])
@@ -76,18 +67,29 @@ export const one: Challenge = (input) => {
         else {
             const place = pathOfObj(currentDir, obj)
             output.forEach(file => {
-                const [size,name] = file.split(' ')
+                const [size, name] = file.split(' ')
                 if (!size) return
-                if(size != 'dir') {
+                if (size != 'dir') {
                     place.i += Number(size)
                 }
             })
         }
     })
-    
     crawlAndUpdateI(obj)
-    return crawlAndSumI(obj)
-    
+    return obj
+}
+
+function crawlAndSumI(baseObj: File) {
+    let i = 0;
+    i += baseObj.i < 100000 ? baseObj.i : 0
+    Object.values(baseObj.children).forEach(child => {
+        if (child.children) i += crawlAndSumI(child)
+    })
+    return i
+}
+
+export const one: Challenge = (input) => {
+    return crawlAndSumI(genTree(input))
 }
 
 export const tests: Tests = [
