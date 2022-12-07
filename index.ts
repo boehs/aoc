@@ -108,11 +108,11 @@ Promise.all(Object.entries(newTest).map(([k,v]) => {
     console.log(`${k}:`)
     v.forEach(fn => {
         const tnow = performance.now()
-        const res = fn()
         if (failed) {
             console.log(`   ⚠️ Stopped`)
             return
         }
+        const res = fn()
         if (typeof res == 'object') {
             failed = res[0]
             console.log(`   ${res[1]} ${c.gray(performance.now()-tnow)}`)
