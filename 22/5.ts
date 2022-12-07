@@ -10,7 +10,7 @@ move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2`
 
-export const one: Challenge = (input) => {
+function parse(input: string) {
     const [unparsedCrates, unparsedMoves] = input.split('\n\n').map(g => g.split('\n'))
 
     // Move x from y to z
@@ -29,7 +29,13 @@ export const one: Challenge = (input) => {
         .map((_, index) => originalCrates.map(row => row[index]).reverse())
         // Remove empty
         .map(arr => arr.slice(1).flatMap(s => s == ' ' ? [] : s))
+    
+    return {crates, moves}
+}
 
+export const one: Challenge = (input) => {
+    const {crates, moves} = parse(input)
+    
     // Reverse is important here
     // "Again, because crates are moved one at a time, crate C ends up below crate M"
     // Took embarassingly long to actually read the problem
@@ -41,30 +47,15 @@ export const one: Challenge = (input) => {
 }
 
 export const two: Challenge = (input) => {
-    const [unparsedCrates, unparsedMoves] = input.split('\n\n').map(g => g.split('\n'))
+    const {crates, moves} = parse(input)
 
-    // Move x from y to z
-    const moves = unparsedMoves.map(move => move
-        .replaceAll(new RegExp('(' + ['move', 'from', 'to'].join('|') + ')', 'g'), '')
-        .split('  ')
-        .map(Number)
-    )
-
-    const originalCrates = unparsedCrates.map(l => l
-        .split('')
-        .filter((_, i) => (i - 1) % 4 === 0))
-
-    let crates = originalCrates[0]
-        .map((_, index) => originalCrates.map(row => row[index]).reverse())
-        .map(arr => arr.slice(1).flatMap(s => s == ' ' ? [] : s))
-
+    // Same thing as before, just without that nasty reverse
     moves.forEach(([n, from, to]) => {
         crates[to - 1] = [...crates[to - 1], ...crates[from - 1].splice(-n)]
     })
 
     return crates.reduce((a, b) => a + b[b.length - 1], '')
 }
-
 
 export const tests: Tests = [
     [one, sample, 'CMZ'],
