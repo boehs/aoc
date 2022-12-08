@@ -1,4 +1,5 @@
 import { Challenge, Tests } from "~/types"
+import { transpose } from "~/utils/matrix"
 
 const sample = `    [D]    
 [N] [C]    
@@ -25,8 +26,7 @@ function parse(input: string) {
         .filter((_, i) => (i - 1) % 4 === 0))
 
     // Rotate matrix
-    let crates = originalCrates[0]
-        .map((_, index) => originalCrates.map(row => row[index]).reverse())
+    let crates = transpose(originalCrates)
         // Remove empty
         .map(arr => arr.slice(1).flatMap(s => s == ' ' ? [] : s))
     
