@@ -52,7 +52,7 @@ const possibilities: ((type: string, number: string | number) => string)[] = [
     (a,b) => `{'${a}': ${b}}`
 ]
 const choice = possibilities[Math.floor(Math.random()*possibilities.length)];
-console.log(`🎄 AOC ${c.bold(`${choice('day',args.day)} ${choice('year',args.year)}`)}`)
+console.log(`🎄 AOC ${c.bold(c.red(`${choice('day',c.green(args.day))} ${choice('year',c.green(args.year))}`))}`)
 
 async function fileExists(filename) {
     try {
@@ -93,8 +93,8 @@ function doStuff([func,input,output]: [Challenge,string,any]): [boolean,string] 
     const short = input.split('\n')
     let newInput = short[0]
     if (short.length > 1) newInput = `${short[0]}...${short.length}`
-    if (result == output) return [false, `✅ ${func.name}(${newInput}) == ${output}`]
-    else return [true, `❌ ${func.name}(${newInput}) != ${output}, == ${result}`]
+    if (result == output) return [false, `✅ ${c.gray(`${func.name}(${newInput})`)} ${c.green(`== ${output}`)}`]
+    else return [true, `❌ ${func.name}(${newInput}) ${c.red(`!= ${output}`)}, ${c.yellow(`== ${result}`)}`]
 }
 
 let newTest: {
@@ -132,7 +132,7 @@ Promise.all(Object.entries(newTest).map(([k,v]) => {
     v.forEach(fn => {
         const tnow = performance.now()
         if (failed) {
-            console.log(`   ⚠️ Stopped`)
+            console.log(`   ⚠️  Stopped`)
             return
         }
         const res = fn()
