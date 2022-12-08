@@ -36,7 +36,7 @@ export const two: Challenge = (input) =>
 
 export const tests: Tests = [
     [one, sample, 24000],
-    [two, sample, 45001],
+    [two, sample, 45000],
     [[one,two], '400', 400]
 ]
 
