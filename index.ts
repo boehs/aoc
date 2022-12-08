@@ -29,6 +29,11 @@ const args = await yargs({})
         implies: 'watch',
         description: 'marks day as long running. Only test against sample'
     })
+    .option('test', {
+        type: 'boolean',
+        default: true,
+        alias: 't',
+    })
     .help()
     .parse(process.argv)
     
@@ -107,7 +112,7 @@ if (!args.watch) {
     if (!await fileExists(path)) await copyFile('./template.ts', path)
     const base: Base = await import(path)
     
-    if (base.tests) {
+    if (base.tests && args.test) {
         base.tests.forEach(([func,input,output]) => {
             if (Array.isArray(func)) func.forEach(subFun => {
                 if (!newTest[subFun.name]) newTest[subFun.name] = []
