@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import yargs from 'yargs'
 import { Base, Challenge,  } from './types'
 import { readFile, access, writeFile, copyFile } from 'node:fs/promises'
@@ -126,6 +127,7 @@ if (!args.watch) {
     })
 }
 
+const startTime = performance.now()
 Promise.all(Object.entries(newTest).map(([k,v]) => {
     let failed = false
     console.log(`${k}:`)
@@ -143,4 +145,6 @@ Promise.all(Object.entries(newTest).map(([k,v]) => {
             console.log(res)
         }
     })
-}))
+})).then(() => {
+    console.log(`ran in ${c.gray(performance.now()-startTime)}`)
+})
