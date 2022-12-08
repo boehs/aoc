@@ -88,10 +88,28 @@ function crawlAndSumI(baseObj: File) {
     return i
 }
 
-export const one: Challenge = (input) => {
-    return crawlAndSumI(genTree(input))
+export const one: Challenge = (input) => crawlAndSumI(genTree(input))
+
+function returnFrees(baseObj: File,og = []) {
+    og.push(baseObj.i)
+    Object.values(baseObj.children).forEach(child => {
+        if (child.children) returnFrees(child,og)
+    })
+    return og
+}
+
+const diskspace = 70000000
+const target = 30000000
+export const two: Challenge = (input) => {
+    const fs = genTree(input)
+    const usedSpace = fs.i
+    const neededFree = -(diskspace-target-usedSpace)
+    return returnFrees(fs).reduce((a,b) => b >= neededFree && a > b ? b : a)
 }
 
 export const tests: Tests = [
     [one, sample, 95437],
+    [two, sample, 24933642]
 ]
+
+// https://tsplay.dev/aoc2022day7 is much better than mine
