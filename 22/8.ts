@@ -26,6 +26,25 @@ export const one: Challenge = (input) => {
     return i
 }
 
+export const two: Challenge = (input) => {
+    const matrix = matrixFromIGrid(input)
+
+    return matrix.map((rows, y) => rows.map((h, x) => {
+        const column = getColumn(matrix, x)
+        return [
+            rows.slice(x + 1),
+            rows.slice(0, x).reverse(),
+            column.slice(y + 1),
+            column.slice(0, y).reverse()
+        ].reduce((itemTotal, currentDir) => {
+            let i = currentDir.findIndex(p => p >= h)
+            return (i < 0 ? currentDir.length : i + 1) * itemTotal
+        }, 1)
+    })
+    ).flat().sort((a, b) => b - a)[0]
+}
+
 export const tests: Tests = [
-    [one, sample, 21]
+    [one, sample, 21],
+    [two, sample, 8]
 ]
