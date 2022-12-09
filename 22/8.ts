@@ -1,5 +1,5 @@
 import { Challenge, Tests } from "~/types"
-import { getColumn, matrixFromIGrid } from "~/utils/matrix"
+import { matrixFromIGrid, transpose } from "~/utils/matrix"
 
 const sample = `30373
 25512
@@ -9,16 +9,17 @@ const sample = `30373
 
 export const one: Challenge = (input) => {
     const matrix = matrixFromIGrid(input)
+    const column = transpose(matrix)
+
     let i = 0
 
     matrix.forEach((row, y) => {
         row.forEach((h, x) => {
-            const column = getColumn(matrix, x)
             if ([
                 row.slice(x + 1),
                 row.slice(0, x),
-                column.slice(y + 1),
-                column.slice(0, y)
+                column[x].slice(y + 1),
+                column[x].slice(0, y)
             ].some(res => res.every(i => h > i))) i++
         })
     })
@@ -28,14 +29,14 @@ export const one: Challenge = (input) => {
 
 export const two: Challenge = (input) => {
     const matrix = matrixFromIGrid(input)
+    const column = transpose(matrix)
 
     return matrix.map((rows, y) => rows.map((h, x) => {
-        const column = getColumn(matrix, x)
         return [
             rows.slice(x + 1),
             rows.slice(0, x).reverse(),
-            column.slice(y + 1),
-            column.slice(0, y).reverse()
+            column[x].slice(y + 1),
+            column[x].slice(0, y).reverse()
         ].reduce((itemTotal, currentDir) => {
             let i = currentDir.findIndex(p => p >= h)
             return (i < 0 ? currentDir.length : i + 1) * itemTotal
