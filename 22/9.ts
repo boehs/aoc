@@ -19,28 +19,18 @@ function mod(dir: Dirs, arr: [number, number]) {
     if (dir == 'D') arr[1]--
 }
 
+const isTouching = (head: Cord, tail: Cord) => tail.every((n, i) => Math.abs(head[i] - tail[i]) <= 1)
+
 export const one: Challenge = (input) => {
     const head: Cord = [0, 0]
-    const tail: Cord = [0, 0]
-    let prev = ''
-    let places = new Set(['0.0'])
+    let tail: Cord = [0, 0]
+    let places = new Set()
     input.split('\n').map(l => {
         const [dir, x] = l.split(' ') as [Dirs, string]
         const _ = [...Array(Number(x))].forEach(() => {
+            const prev = [...head]
             mod(dir, head)
-            
-            const divorsedBy = tail.findIndex((n, i) => Math.abs(head[i] - n) > 1)
-            if (divorsedBy != -1) {
-                if (tail.every((n,i) => Math.abs(head[i] - n) > 0)) {
-                    const opp = divorsedBy == 1 ? 0 : 1
-                    Math.sign(head[opp] - tail[opp]) == 1
-                        ? tail[opp]++
-                        : tail[opp]--
-                }
-                mod(prev, tail)
-            }
-            
-            prev = dir
+            if (!isTouching(head, tail)) tail = prev
             places = places.add(tail.join('.'))
         });
     })
