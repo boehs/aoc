@@ -21,22 +21,43 @@ function mod(dir: Dirs, arr: [number, number]) {
 
 const isTouching = (head: Cord, tail: Cord) => tail.every((n, i) => Math.abs(head[i] - tail[i]) <= 1)
 
-export const one: Challenge = (input) => {
+const simulate = (input: string, track: number) => {
     const head: Cord = [0, 0]
-    let tail: Cord = [0, 0]
-    let places = new Set()
+    const tail: Cord[] = Array(track).fill([0, 0])
+    const places = new Set<string>()
     input.split('\n').map(l => {
         const [dir, x] = l.split(' ') as [Dirs, string]
-        const _ = [...Array(Number(x))].forEach(() => {
-            const prev = [...head]
+        for (let i = 0; i < Number(x); i++) {
             mod(dir, head)
-            if (!isTouching(head, tail)) tail = prev
-            places = places.add(tail.join('.'))
-        });
+            tail.reduce((former, current,i) => {
+                const p = isTouching(former,current) ? current : current.map((n,i) =>
+                    n - (Math.sign(n - former[i])
+                ))
+                tail[i] = p
+                return p
+            }, head)
+            places.add(tail[track-1].join('.'))
+        };
     })
     return [...places].length
 }
 
+export const one: Challenge = (input) => simulate(input, 1)
+
+const twosample = `R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20`
+
+export const two: Challenge = (input) => simulate(input, 9)
+
+
 export const tests: Tests = [
     [one, sample, 13],
+    [two, sample, 1],
+    [two, twosample, 36],
 ]
