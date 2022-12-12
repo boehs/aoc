@@ -3,11 +3,11 @@ import { Challenge, Tests } from "~/types"
 export const one: Challenge = (input) => {
     return input.split('\n').reduce(([cycle, reg, sum], statement) => {
         const [label,n] = statement.split(' ') as ['noop' | 'addx', string?]
-        let run = 0
-        if (label == 'noop') run = 1
-        else if (label == 'addx') run = 2
+        let cycles = 0
+        if (label == 'noop') cycles = 1
+        else if (label == 'addx') cycles = 2
 
-        for (let i = 0; i < run; i++) {
+        for (let i = 0; i < cycles; i++) {
             cycle++
             if ([20,60,100,140,180,220].includes(cycle)) {
                 console.log(cycle,cycle*reg)
