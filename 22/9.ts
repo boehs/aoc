@@ -53,7 +53,6 @@ U 20`
 
 export const two: Challenge = (input) => simulate(input, 9)
 
-
 export const tests: Tests = [
     [one, sample, 13],
     [two, sample, 1],
