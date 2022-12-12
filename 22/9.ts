@@ -19,7 +19,7 @@ function mod(dir: Dirs, arr: [number, number]) {
     if (dir == 'D') arr[1]--
 }
 
-const isTouching = (head: Cord, tail: Cord) => tail.every((n, i) => Math.abs(head[i] - tail[i]) <= 1)
+const isTouching = (head: Cord, tail: Cord) => tail.every((_, i) => Math.abs(head[i] - tail[i]) <= 1)
 
 const simulate = (input: string, track: number) => {
     const head: Cord = [0, 0]
@@ -29,10 +29,8 @@ const simulate = (input: string, track: number) => {
         const [dir, x] = l.split(' ') as [Dirs, string]
         for (let i = 0; i < Number(x); i++) {
             mod(dir, head)
-            tail.reduce((former, current,i) => {
-                const p = isTouching(former,current) ? current : current.map((n,i) =>
-                    n - (Math.sign(n - former[i])
-                ))
+            tail.reduce((former, current, i) => {
+                const p = isTouching(former,current) ? current : current.map((n,i) => n + Math.sign(former[i] - n))
                 tail[i] = p
                 return p
             }, head)
