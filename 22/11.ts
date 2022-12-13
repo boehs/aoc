@@ -29,15 +29,20 @@ Test: divisible by 17
   If false: throw to monkey 1`
 
 const extractNumber = (input: string) => Number(input.replaceAll(/[^0-9]*/g,''))
-const parseMonkey = (monkey: string) => {
+const parseMonkey = (monkey: string, worryManagement: boolean) => {
     const [idStr, itemsStr, operationStr, testStr, trueStr, falseStr] = monkey.split('\n')
     
-    const [id, test, ifTrue, ifFalse] = [idStr,testStr,trueStr,falseStr].map(extractNumber)
+    const [id, ifTrue, ifFalse] = [idStr,trueStr,falseStr].map(extractNumber)
     
-    const operation = operationStr.replace('Operation: new = ','')
+    let test = worryManagement ? extractNumber(testStr) : BigInt(extractNumber(testStr))
+    
+    let operation = operationStr.replace('Operation: new = ','')
+    if (!worryManagement) operation = operation.replaceAll(/(\d+)/g,"BigInt($1)")
+    
     const operationFn = Function('old', `return ${operation}`)
     
-    const items = itemsStr.replace('Starting items: ', '').split(', ').map(Number)
+    let items = itemsStr.replace('Starting items: ', '').split(', ').map(Number)
+    if (!worryManagement) items = items.map(BigInt)
     
     return {
         id,
@@ -49,13 +54,17 @@ const parseMonkey = (monkey: string) => {
         inspected: 0
     }
 }
-export const one: Challenge = (input) => {
-    const monkeys = input.split('\n\n').map(parseMonkey)
+
+const monkeyBusiness = (input,worryManagement,rounds) => {
+    const monkeys = input.split('\n\n').map(monkey => parseMonkey(monkey,worryManagement))
     // 20 Rounds
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < rounds; i++) {
         monkeys.forEach(monkey => {
             monkey.items.forEach(item => {
-                const newWorry = Math.floor(monkey.operationFn(item) / 3)
+                // worryManagement is major change between both parts
+                const newWorry = worryManagement
+                    ? Math.floor(monkey.operationFn(item) / 3)
+                    : monkey.operationFn(item)
                 monkeys[newWorry % monkey.test == 0
                         ? monkey.ifTrue
                         : monkey.ifFalse].items.push(newWorry)
@@ -64,6 +73,10 @@ export const one: Challenge = (input) => {
             monkey.items = []
         })
     }
+    
+    console.log(monkeys
+        // Sort by most passes
+        .sort((a,b) => b.inspected - a.inspected))
     
     return monkeys
         // Sort by most passes
@@ -74,6 +87,11 @@ export const one: Challenge = (input) => {
         .reduce((a,b) => a*b.inspected,1)
 }
 
+export const one: Challenge = (input) => monkeyBusiness(input,true,20)
+export const two: Challenge = (input) => monkeyBusiness(input,false,10000)
+
+
 export const tests: Tests = [
     [one, sample, 10605],
+    [two, sample, 2713310158]
 ]
