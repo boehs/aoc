@@ -10,13 +10,37 @@ export const one: Challenge = (input) => {
         for (let i = 0; i < cycles; i++) {
             cycle++
             if ([20,60,100,140,180,220].includes(cycle)) {
-                console.log(cycle,cycle*reg)
                 sum += reg * cycle
             }
         }
         if (n) reg += Number(n)
         return [cycle,reg,sum]
     }, [0,1,0])[2]
+}
+
+export const two: Challenge = (input) => {
+    let str = ''
+    let arr = Array(40).fill(' ')
+    input.split('\n').reduce(([cycle, reg], statement) => {
+        const [label,n] = statement.split(' ') as ['noop' | 'addx', string?]
+        let cycles = 0
+        if (label == 'noop') cycles = 1
+        else if (label == 'addx') cycles = 2
+        for (let i = 0; i < cycles; i++) {
+            const _ = [-1,0,1].forEach(px => {
+                if (cycle == reg + px) arr[reg + px] = '█'
+            })
+            cycle++
+            if (cycle % 40 == 0) {
+                cycle = 0
+                str += '\n' + arr.join('')
+                arr = Array(40).fill(' ')
+            }
+        }
+        if (n) reg += Number(n)
+        return [cycle,reg]
+    }, [0,1])
+    return str.trim()
 }
 
 const sample = `addx 15
@@ -168,4 +192,10 @@ noop`
 
 export const tests: Tests = [
     [one, sample, 13140],
+    [two, sample, `##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....`.replaceAll('.',' ').replaceAll('#','█').trim()]
 ]
