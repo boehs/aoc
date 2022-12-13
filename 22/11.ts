@@ -29,20 +29,15 @@ Test: divisible by 17
   If false: throw to monkey 1`
 
 const extractNumber = (input: string) => Number(input.replaceAll(/[^0-9]*/g,''))
-const parseMonkey = (monkey: string, worryManagement: boolean) => {
+const parseMonkey = (monkey: string) => {
     const [idStr, itemsStr, operationStr, testStr, trueStr, falseStr] = monkey.split('\n')
     
-    const [id, ifTrue, ifFalse] = [idStr,trueStr,falseStr].map(extractNumber)
+    const [id, test, ifTrue, ifFalse] = [idStr,testStr,trueStr,falseStr].map(extractNumber)
     
-    let test = worryManagement ? extractNumber(testStr) : BigInt(extractNumber(testStr))
-    
-    let operation = operationStr.replace('Operation: new = ','')
-    if (!worryManagement) operation = operation.replaceAll(/(\d+)/g,"BigInt($1)")
-    
+    const operation = operationStr.replace('Operation: new = ','')
     const operationFn = Function('old', `return ${operation}`)
     
-    let items = itemsStr.replace('Starting items: ', '').split(', ').map(Number)
-    if (!worryManagement) items = items.map(BigInt)
+    const items = itemsStr.replace('Starting items: ', '').split(', ').map(Number)
     
     return {
         id,
@@ -56,7 +51,7 @@ const parseMonkey = (monkey: string, worryManagement: boolean) => {
 }
 
 const monkeyBusiness = (input,worryManagement,rounds) => {
-    const monkeys = input.split('\n\n').map(monkey => parseMonkey(monkey,worryManagement))
+    const monkeys = input.split('\n\n').map(parseMonkey)
     // 20 Rounds
     for (let i = 0; i < rounds; i++) {
         monkeys.forEach(monkey => {
@@ -73,10 +68,6 @@ const monkeyBusiness = (input,worryManagement,rounds) => {
             monkey.items = []
         })
     }
-    
-    console.log(monkeys
-        // Sort by most passes
-        .sort((a,b) => b.inspected - a.inspected))
     
     return monkeys
         // Sort by most passes
