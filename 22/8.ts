@@ -1,5 +1,5 @@
 import { Challenge, Tests } from "~/types"
-import { matrixFromIGrid, transpose } from "~/utils/matrix"
+import { Matrix } from "~/utils/matrix"
 
 const sample = `30373
 25512
@@ -8,8 +8,8 @@ const sample = `30373
 35390`
 
 export const one: Challenge = (input) => {
-    const matrix = matrixFromIGrid(input)
-    const column = transpose(matrix)
+    const matrix = Matrix.fromStr<string>(input)
+    const column = matrix.transpose()
 
     let i = 0
 
@@ -28,8 +28,8 @@ export const one: Challenge = (input) => {
 }
 
 export const two: Challenge = (input) => {
-    const matrix = matrixFromIGrid(input)
-    const column = transpose(matrix)
+    const matrix = Matrix.fromStr<string>(input)
+    const column = matrix.transpose()
 
     return matrix.map((rows, y) => rows.map((h, x) => {
         return [

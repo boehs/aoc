@@ -1,5 +1,5 @@
 import { Challenge, Tests } from "~/types"
-import { rotate } from "~/utils/matrix"
+import { Matrix } from "~/utils/matrix"
 
 const sample = `    [D]    
 [N] [C]    
@@ -26,7 +26,7 @@ function parse(input: string) {
         .filter((_, i) => (i - 1) % 4 === 0))
 
     // Rotate matrix
-    let crates = rotate(originalCrates)
+    let crates = new Matrix(...originalCrates).rotate()
         // Remove empty
         .map(arr => arr.slice(1).flatMap(s => s == ' ' ? [] : s))
     
