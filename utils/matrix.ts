@@ -48,7 +48,7 @@ export class Matrix<T extends any[]> extends Array<T> {
             .join('\n');
     }
 
-    findCords(predicate: Parameters<Array<T[number]>['findIndex']>[0]) {
+    findCord(predicate: Parameters<Array<T[number]>['findIndex']>[0]) {
         for (let i = 0; i < this.length; i++) {
           const i2 = this[i].findIndex(predicate)
           if (i2 !== -1)

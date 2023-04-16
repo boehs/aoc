@@ -8,62 +8,53 @@ accszExk
 acctuvwj
 abdefghi`
 
-function travel(
-    matrix: Matrix<number[]>,
-    at: cord,
-    from: direction,
-    visited: string[],
-    target: cord,
-    i: number,
-    possibleSolves: number[]
-) {
-    const height = matrix.atCord(at)
-    directions.forEach(async direction => {
-
-        //if (direction == from) return
-        const possibility = direction2cord(direction,at)
-        if (possibility[0] < 0 || possibility[1] < 0) return
-        if (visited.includes(possibility.join(','))) return
-        const possibleHeight = matrix.atCord(possibility)
-        if (possibleHeight == undefined) return
-        if (possibleHeight > height + 1) return
-
-        //const gFP = new Matrix<(string | number)[]>(...JSON.parse(JSON.stringify(matrix)))
-        //visited.forEach(visited => {
-        //    const cord = visited.split(',').reverse()
-        //    gFP[cord[0]][cord[1]] = 'x'
-        //})
-        //gFP[at[1]][at[0]] = 'x'
-        //gFP[possibility[1]][possibility[0]] = 'X'
-        //await new Promise((r) => setTimeout(r,1000))
-        //console.log(gFP.toString(' '))
-        //console.log('---',i)
-        console.log(i)
-        if (possibility.toString() == target.toString()) {
-            console.log(i+1)
-            possibleSolves.push(i+1)
-        }
-
-        travel(matrix,possibility,direction,[...visited,at.join(',')],target,i+1,possibleSolves)
-    })
-
-
-    return possibleSolves
-}
-
 export const one: Challenge = (input) => {
     const matr = Matrix.fromStr<string>(input)
-    const start = matr.findCords((c) => c == 'S')
-    const end = matr.findCords((c) => c == 'E')
+    const start = matr.findCord((c) => c == 'S')
+    const end = matr.findCord((c) => c == 'E')
     matr[end[1]][end[0]] = 'z'
-    matr[0][0] = 'a'
+    matr[start[1]][start[0]] = 'a'
     const heights = matr.iMap((v) => v.charCodeAt(0) - 97)
-    const possibleSolves = travel(heights,start,'up',[],end,0,[])
-    console.log(possibleSolves)
-    const smallest = Math.min(...possibleSolves)
-    return smallest
+    const [w,h] = [heights[0].length, heights.length]
+
+    const seen = new Set()
+    const queue: [number,cord][] = [[0,end]]
+
+    let res = 0
+
+    while (res == 0) {
+        const [l,[x,y]] = queue.shift()
+        const p = [x,y].toString()
+
+        if (p == start.toString()) res = l
+
+        if (seen.has(p)) continue
+        seen.add(p)
+
+        for (const direction of directions) {
+            const [nx,ny] = direction2cord(direction,[x,y])
+            if (
+                0 <= ny && ny < h
+                && 0 <= nx && nx < w
+                && !seen.has([nx,ny].toString)
+                && (heights.atCord([x,y]) - heights.atCord([nx,ny])) <= 1
+            ) queue.push([l+1,[nx,ny]])
+        }
+    }
+    return res
 }
 
 export const tests: Tests = [
     [one, sample, 31],
 ]
+
+
+/**
+ * This was a good opportunity to learn a little about pathfinding.
+ * Initially I just tried bruting, which was fine for the example. I
+ * Considered Dijkstra, A*, and adjacency matrixes. Given
+ * - We know both the start and end locations of the path we need to search.
+ * - We don't need to find the actual path, just its length.
+ * - The search space is finite (on a grid) and comparatively small.
+ * a breadth-first is fine.
+ */

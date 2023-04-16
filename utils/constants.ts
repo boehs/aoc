@@ -1,6 +1,6 @@
 export const alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
-export const directions = ['left', 'right', 'up', 'down'] as const
+export const directions = ['right', 'left', 'up', 'down'] as const
 export type direction = typeof directions[number]
 
 /**
