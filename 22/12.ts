@@ -8,7 +8,7 @@ accszExk
 acctuvwj
 abdefghi`
 
-export const one: Challenge = (input) => {
+const solve = (input: string, part: 1 | 2) => {
     const matr = Matrix.fromStr<string>(input)
     const start = matr.findCord((c) => c == 'S')
     const end = matr.findCord((c) => c == 'E')
@@ -26,7 +26,8 @@ export const one: Challenge = (input) => {
         const [l,[x,y]] = queue.shift()
         const p = [x,y].toString()
 
-        if (p == start.toString()) res = l
+        if (part == 1 && p == start.toString()) res = l
+        if (part == 2 && heights.atCord([x,y]) == 0) res = l
 
         if (seen.has(p)) continue
         seen.add(p)
@@ -44,8 +45,13 @@ export const one: Challenge = (input) => {
     return res
 }
 
+export const one: Challenge = (input) => solve(input,1)
+export const two: Challenge = (input) => solve(input,2)
+
+
 export const tests: Tests = [
     [one, sample, 31],
+    [two, sample, 29]
 ]
 
 
