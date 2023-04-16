@@ -1,12 +1,27 @@
 import { Challenge, Tests } from "~/types"
-import { cord, direction, directions } from "~/utils/constants"
+import { cord , directions } from "~/utils/constants"
 import { Matrix, direction2cord } from "~/utils/matrix"
+import logUpdate from 'log-update';
 
 const sample = `Sabqponm
 abcryxxl
 accszExk
 acctuvwj
 abdefghi`
+
+function render(matr: Matrix<string[]>, seen: Set<string>, l: number, queue: [number,cord][]) {
+    function sleep(time){
+        let now = new Date().getTime();
+        while(new Date().getTime() < now + time){ }
+    }
+    sleep(3)
+    const base = Matrix.fromStr(matr.toString())
+    seen.forEach(item => {
+        const [x,y] = item.split(',')
+        base[y][x] = '#'
+    })
+    logUpdate(base.toString('') + `\n${l} ${queue.length} | ${queue.map(row => `${row[1][0]},${row[1][1]}`).join(' ')}`)
+}
 
 const solve = (input: string, part: 1 | 2) => {
     const matr = Matrix.fromStr<string>(input)
@@ -17,7 +32,7 @@ const solve = (input: string, part: 1 | 2) => {
     const heights = matr.iMap((v) => v.charCodeAt(0) - 97)
     const [w,h] = [heights[0].length, heights.length]
 
-    const seen = new Set()
+    const seen = new Set<string>()
     const queue: [number,cord][] = [[0,end]]
 
     let res = 0
@@ -30,6 +45,7 @@ const solve = (input: string, part: 1 | 2) => {
         if (part == 2 && heights.atCord([x,y]) == 0) res = l
 
         if (seen.has(p)) continue
+        //render(matr,seen,l,queue)
         seen.add(p)
 
         for (const direction of directions) {
@@ -37,11 +53,12 @@ const solve = (input: string, part: 1 | 2) => {
             if (
                 0 <= ny && ny < h
                 && 0 <= nx && nx < w
-                && !seen.has([nx,ny].toString)
+                && !seen.has([nx,ny].toString())
                 && (heights.atCord([x,y]) - heights.atCord([nx,ny])) <= 1
             ) queue.push([l+1,[nx,ny]])
         }
     }
+    //logUpdate.clear()
     return res
 }
 
