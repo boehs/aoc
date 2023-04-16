@@ -59,6 +59,19 @@ export const one: Challenge = (input) => {
     }, 0)
 }
 
+const twoAddendum = `
+[[2]]
+[[6]]`
+
+export const two: Challenge = (input) => {
+    const list = (input+twoAddendum).split('\n').filter(v => v != '').map((t) => JSON.parse(t)) as packet[]
+    const res = list.sort(run).reverse()
+    const first = res.findIndex(v => v[0] && v[0][0] == 2)
+    const second = res.findIndex(v => v[0] && v[0][0] == 6)
+    return (first + 1) * (second + 1)
+}
+
 export const tests: Tests = [
     [one, sample, 13],
+    [two, sample, 140]
 ]

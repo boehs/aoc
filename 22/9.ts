@@ -1,4 +1,5 @@
 import { Challenge, Tests } from "~/types"
+import { cord } from "~/utils/constants"
 
 const sample = `R 4
 U 4
@@ -10,7 +11,6 @@ L 5
 R 2`
 
 type Dirs = 'L' | 'R' | 'U' | 'D'
-type Cord = [number, number]
 
 function mod(dir: Dirs, arr: [number, number]) {
     if (dir == 'L') arr[0]--
@@ -19,11 +19,11 @@ function mod(dir: Dirs, arr: [number, number]) {
     if (dir == 'D') arr[1]--
 }
 
-const isTouching = (head: Cord, tail: Cord) => tail.every((_, i) => Math.abs(head[i] - tail[i]) <= 1)
+const isTouching = (head: cord, tail: cord) => tail.every((_, i) => Math.abs(head[i] - tail[i]) <= 1)
 
 const simulate = (input: string, track: number) => {
-    const head: Cord = [0, 0]
-    const tail: Cord[] = Array(track).fill([0, 0])
+    const head: cord = [0, 0]
+    const tail: cord[] = Array(track).fill([0, 0])
     const places = new Set<string>()
     input.split('\n').map(l => {
         const [dir, x] = l.split(' ') as [Dirs, string]
