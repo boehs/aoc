@@ -1,3 +1,5 @@
+import { cord, direction } from "./constants"
+
 export class Matrix<T extends any[]> extends Array<T> {
 
     static blank<F>(x: number, y: number, fill: F) {
@@ -7,6 +9,12 @@ export class Matrix<T extends any[]> extends Array<T> {
 
     static fromStr<T extends any>(input: string, filter: (v: string) => T = (v: string) => v as any) {
         return new Matrix(...input.split('\n').map(line => line.split('').map(filter)))
+    }
+
+    atCord(cord: cord) {
+        const p1 = this[cord[1]]
+        if (p1 == undefined) return undefined
+        else return p1[cord[0]]
     }
 
     column(i: number) {
@@ -39,4 +47,24 @@ export class Matrix<T extends any[]> extends Array<T> {
             .map(a => a.map((s, i) => s.padEnd(sizes[i])).join(seperator))
             .join('\n');
     }
+
+    findCords(predicate: Parameters<Array<T[number]>['findIndex']>[0]) {
+        for (let i = 0; i < this.length; i++) {
+          const i2 = this[i].findIndex(predicate)
+          if (i2 !== -1)
+            return [i2,i] as cord
+        }
+        return undefined
+    }
+
+    iMap(...params: Parameters<Array<T[number]>['map']>) {
+        return new Matrix(...this.map(row => row.map(...params)))
+    }
+}
+
+export function direction2cord(direction: direction, current: cord = [0,0], distance: number = 1): cord {
+    if (direction == 'down') return [current[0],current[1]-distance]
+    if (direction == 'up') return [current[0],current[1]+distance]
+    if (direction == 'left') return [current[0]-distance,current[1]]
+    if (direction == 'right') return [current[0]+distance,current[1]]
 }
