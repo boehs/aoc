@@ -9,11 +9,13 @@ accszExk
 acctuvwj
 abdefghi`
 
+// eventually I will make all of this async and it will be fine, but today is not the day.
+function sleep(time){
+    let now = new Date().getTime();
+    while(new Date().getTime() < now + time){ }
+}
+
 function render(matr: Matrix<string[]>, seen: Set<string>, l: number, queue: [number,cord][]) {
-    function sleep(time){
-        let now = new Date().getTime();
-        while(new Date().getTime() < now + time){ }
-    }
     sleep(3)
     const base = Matrix.fromStr(matr.toString())
     seen.forEach(item => {
@@ -64,7 +66,6 @@ const solve = (input: string, part: 1 | 2) => {
 
 export const one: Challenge = (input) => solve(input,1)
 export const two: Challenge = (input) => solve(input,2)
-
 
 export const tests: Tests = [
     [one, sample, 31],

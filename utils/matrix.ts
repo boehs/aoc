@@ -4,11 +4,11 @@ export class Matrix<T extends any[]> extends Array<T> {
 
     static blank<F>(x: number, y: number, fill: F) {
         const arr = [...Array(x)].map(() => [...Array(y)].fill(fill)) as F[][]
-        return new Matrix(arr)
+        return new this(...arr)
     }
 
     static fromStr<T extends any>(input: string, filter: (v: string) => T = (v: string) => v as any) {
-        return new Matrix(...input.split('\n').map(line => line.split('').map(filter)))
+        return new this(...input.split('\n').map(line => line.split('').map(filter)))
     }
 
     atCord(cord: cord) {
