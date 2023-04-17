@@ -1,3 +1,11 @@
+/**
+ * @remarks
+ * For this AOC, to manage monkey business (keep numbers low),
+ * we need to use modular arithmetic (or, specifically, chinese remainder theorem)
+ * learning!
+ * @name Monkey in the Middle
+ */
+
 import { Challenge, Tests } from "~/types"
 
 const sample = `Monkey 0:

@@ -1,4 +1,3 @@
-import logUpdate from "log-update"
 import { Challenge, Tests } from "~/types"
 import { cord } from "~/utils/constants"
 import { Scene } from "~/utils/scene"
@@ -20,6 +19,8 @@ function simulate(cord: cord = [0,0], scene: Scene<string[]>, queue: Set<string>
 }
 
 export const one: Challenge = (input) => {
+    // Scene Setup
+
     let clusters = input
         .split('\n')
         .map(cluster => cluster
@@ -40,11 +41,15 @@ export const one: Challenge = (input) => {
             return b
         })
     })
+
+    // Setup Simulation
     const dropper = [500-minX+1,0]
     scene[dropper[1]][dropper[0]] = '+'
     let spawn = `${500-minX+1},1`
     let queue = new Set<string>()
     queue.add(spawn)
+
+    // Simulate
     let i = 0
     let done = false
     while(!done) {
@@ -56,6 +61,7 @@ export const one: Challenge = (input) => {
         }
         i++
     }
+
     return scene.flat(2).filter(t => t=='.').length-[...queue].length
 }
 

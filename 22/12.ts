@@ -1,3 +1,16 @@
+/**
+ * @name Hill Climbing Algorithm
+ * @date 15/4/22
+ * @remarks
+ * This was a good opportunity to learn a little about pathfinding.
+ * Initially I just tried bruting, which was fine for the example. I
+ * Considered Dijkstra, A*, and adjacency matrixes. Given
+ * - We know both the start and end locations of the path we need to search.
+ * - We don't need to find the actual path, just its length.
+ * - The search space is finite (on a grid) and comparatively small.
+ * a breadth-first is fine.
+ */
+
 import { Challenge, Tests } from "~/types"
 import { cord , directions } from "~/utils/constants"
 import { Matrix, direction2cord } from "~/utils/matrix"
@@ -71,14 +84,3 @@ export const tests: Tests = [
     [one, sample, 31],
     [two, sample, 29]
 ]
-
-
-/**
- * This was a good opportunity to learn a little about pathfinding.
- * Initially I just tried bruting, which was fine for the example. I
- * Considered Dijkstra, A*, and adjacency matrixes. Given
- * - We know both the start and end locations of the path we need to search.
- * - We don't need to find the actual path, just its length.
- * - The search space is finite (on a grid) and comparatively small.
- * a breadth-first is fine.
- */

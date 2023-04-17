@@ -1,3 +1,9 @@
+/**
+ * @see {@link https://tsplay.dev/aoc2022day7} is much better than mine
+ * @name No Space Left On Device
+ * @date 7/12/22
+ */
+
 import { Challenge, Tests } from "~/types"
 
 const sample = `$ cd /
@@ -111,5 +117,3 @@ export const tests: Tests = [
     [one, sample, 95437],
     [two, sample, 24933642]
 ]
-
-// https://tsplay.dev/aoc2022day7 is much better than mine
