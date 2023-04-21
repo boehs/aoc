@@ -20,7 +20,6 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3`
 const diff = (a, b) => a > b ? a - b : b - a
 
 export const one = (input: string, checkY: number = 2000000) => {
-    if (checkY == 2000000) return
     const parsed = input
         .split('\n')
         .map(l =>
@@ -46,8 +45,8 @@ export const one = (input: string, checkY: number = 2000000) => {
             if (y == checkY) {
                 if (!scene[x]) scene[x] = {}
                 scene[x][y] = '#'
+                queue.push([x, y])
             }
-            queue.push([x, y])
             x++
             y++
         }
@@ -56,8 +55,8 @@ export const one = (input: string, checkY: number = 2000000) => {
             if (y == checkY) {
                 if (!scene[x]) scene[x] = {}
                 scene[x][y] = '#'
+                queue.push([x, y])
             }
-            queue.push([x, y])
             x++
             y--
         }
