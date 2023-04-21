@@ -18,6 +18,7 @@ Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3`
 
 export const one = (input: string, checkY: number = 2000000) => {
+    if (checkY == 2000000) return
     const parsed = input
         .split('\n')
         .map(l =>
@@ -26,7 +27,6 @@ export const one = (input: string, checkY: number = 2000000) => {
                 .filter(v => !(v == ""))
                 .map(Number)
         )
-    const len = parsed.length
 
     const scene: scene = {}
 
@@ -34,13 +34,13 @@ export const one = (input: string, checkY: number = 2000000) => {
         const [sx, sy, bx, by] = group
         let i = 1, done = false
         while (!done) {
-            //console.log('0', [sx,sy],[bx,by], i)
             const queue: cord[] = []
             let x = sx - i, y = sy
             while (y != sy + i + 1) {
-                if (!scene[x]) scene[x] = {}
-                scene[x][y] = '#'
-                //console.log('1',x,y)
+                if (y == checkY) {
+                    if (!scene[x]) scene[x] = {}
+                    scene[x][y] = '#'
+                }
                 queue.push([x, y])
                 if (x == bx && y == by) done = true
                 x++
@@ -48,9 +48,10 @@ export const one = (input: string, checkY: number = 2000000) => {
             }
             x = sx - i, y = sy
             while (y != sy - i - 1) {
-                if (!scene[x]) scene[x] = {}
-                scene[x][y] = '#'
-                //console.log('2',x,y)
+                if (y == checkY) {
+                    if (!scene[x]) scene[x] = {}
+                    scene[x][y] = '#'
+                }
                 queue.push([x, y])
                 if (x == bx && y == by) done = true
                 x++
@@ -58,14 +59,12 @@ export const one = (input: string, checkY: number = 2000000) => {
             }
             queue.forEach(cord => {
                 [x, y] = cord
-                //console.log('3',x,sx)
                 const to = sx + (sx - x)
                 while (true) {
-                    //let now = new Date().getTime();
-                    //while (new Date().getTime() < now + 1) { }
-                    //console.log('4',x,sx,to)
-                    if (!scene[x]) scene[x] = {}
-                    scene[x][y] = '#'
+                    if (y == checkY) {
+                        if (!scene[x]) scene[x] = {}
+                        scene[x][y] = '#'
+                    }
                     if (x == bx && y == by) done = true
                     if (x == to) break
                     x++
@@ -73,7 +72,6 @@ export const one = (input: string, checkY: number = 2000000) => {
             })
             i++
         }
-        console.log(it,len)
     })
     
     const base = Object.entries(scene).filter(column => column[1][checkY] != undefined).length
