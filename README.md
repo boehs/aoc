@@ -1,10 +1,8 @@
 # (Bad|Bun|Boehs) AOC Solutions
 
 ```bash
-# install dependencies:
-bun install
 # run
-./run <year> <day>
+bunx baocr <year> <day>
 ```
 
 # Results
