@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import yargs from 'yargs'
 import { day } from './runner/dayRunner'
+import all from './runner/all'
 
 const now = new Date()
 
@@ -26,7 +27,18 @@ const y = await yargs(process.argv.slice(2))
             default: true,
             alias: 't',
         }),
-        (yargs) => day(yargs.day,yargs.year,yargs.test,yargs.long)
+        (yargs) => day(yargs.day, yargs.year, yargs.test, yargs.long)
     )
+    .command('all [year]', 'run all the AOCs', (yargs) => yargs
+        .positional('year', {
+            type: 'number',
+            default: now.getFullYear(),
+        })
+        .option('n', {
+            description: 'Number of runs',
+            type: 'number',
+            default: 10
+        }),
+        (yargs) => all(yargs.year, yargs.n))
     .help()
     .argv
