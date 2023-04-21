@@ -4,6 +4,9 @@ import { Base } from "~/types";
 import { getInput } from "./helpers";
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 import c from 'picocolors'
+import { possibilities } from "./greetings";
+
+// I'm not sure how this file will handle more than two AOC parts
 
 const interleave = ([ x, ...xs ], ys = []) =>
   x === undefined
@@ -11,6 +14,7 @@ const interleave = ([ x, ...xs ], ys = []) =>
     : [ x, ...interleave (ys, xs) ]  // inductive: some x
 
 export default async function all(year: number, n: number) {
+
     const res: { [day: number]: { [part: string]: number[] } } = {}
     const dp = __dirname + '/../' + year.toString().substring(2)
     const dir = await readdir(dp)
@@ -28,13 +32,16 @@ export default async function all(year: number, n: number) {
                 res[day][k].push(performance.now() - s)
             }
         })
-        console.log(file)
     }
-    const columns = [...new Set(Object.values(res).flatMap(day => Object.keys(day)))]
+    const columns = [...new Set(Object.values(res).flatMap(day => Object.keys(day))),'=sum']
 
-    let avges = Object.fromEntries(Object.entries(res).map(([n,day]) => {
-        const davg = Array.from({...Object.values(day).map(part => (part.reduce((a,b) => a+b,0)/n).toFixed(2) + 'ms'), length: columns.length})
-        return [n,davg]
+    const choice = possibilities[Math.floor(Math.random() * possibilities.length)];
+    console.log(`🎄 AOC ${c.bold(c.red(`${choice('year', c.green(year))} ${choice('day', c.green(Object.keys(res)[0]+'..'+Object.keys(res)[Object.keys(res).length-1]))}`))} ${c.gray(`№=${n}`)}`)
+
+    let avges = Object.fromEntries(Object.entries(res).map(([rn,day]) => {
+        const davg = Array.from({...Object.values(day).map(part => (part.reduce((a,b) => a+b,0)/n)), length: columns.length-1 })
+        const sum = davg.reduce((a,b) => a+(b || 0),0).toFixed(2) + 'ms'
+        return [rn,[...davg.map(n => n ? (n.toFixed(2) + 'ms') : undefined,),sum]]
     }))
     const widest = columns.map((column,i) => Math.max(column.length, ...Object.values(avges).map(day => day[i] ? day[i].length : 0)))
 
