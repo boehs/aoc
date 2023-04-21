@@ -11,7 +11,7 @@ bun install
 
 ## 2022
 
-```bash
+```
 $ ./run all 2022 -n 10
 🎄 AOC /^2022$/ /^1..15$/ №=10
      one        two       =sum     
