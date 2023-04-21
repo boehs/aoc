@@ -17,8 +17,8 @@ BAOCR [year] [day]
 Run a given AOC
 
 Positionals:
-  year                                                  [number] [default: CURRENT_YEAR]
-  day                                                     [number] [default: CURRENT_DAY]
+  year                                          [number] [default: CURRENT_YEAR]
+  day                                            [number] [default: CURRENT_DAY]
 
 Options:
       --version  Show version number                                   [boolean]
@@ -36,7 +36,7 @@ BAOCR all [year]
 Run all the AOCs
 
 Positionals:
-  year                                                  [number] [default: CURRENT_YEAR]
+  year                                          [number] [default: CURRENT_YEAR]
 
 Options:
       --version  Show version number                                   [boolean]
