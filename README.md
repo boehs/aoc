@@ -1,4 +1,4 @@
-# (Bad|Bun|Boehs) AOC (Results|Runner)
+# (Bad|Bun|Boehs) AOC Solutions
 
 ```bash
 # install dependencies:
