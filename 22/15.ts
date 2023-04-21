@@ -36,16 +36,18 @@ export const one = (input: string, checkY: number = 2000000) => {
 
         let queue: cord | undefined
         let x = sx - i, y = sy
-        while (y != sy + i + 1) {
-            if (y == checkY) queue = [x, y]
-            x++
-            y++
-        }
-        x = sx - i, y = sy
-        while (y != sy - i - 1) {
-            if (y == checkY) queue = [x, y]
-            x++
-            y--
+        if (checkY > y) {
+            while (y != sy + i + 1) {
+                if (y == checkY) queue = [x, y]
+                x++
+                y++
+            }
+        } else {
+            while (y != sy - i - 1) {
+                if (y == checkY) queue = [x, y]
+                x++
+                y--
+            }
         }
         if (queue) {
             [x, y] = queue
@@ -63,7 +65,6 @@ export const one = (input: string, checkY: number = 2000000) => {
             .filter(cluster => cluster[3] == checkY)
             .map(cluster => `${cluster[2]},${cluster[3]}`)
     )].length
-    console.log(performance.now())
     return [...scene].length - beacons
 
 }
