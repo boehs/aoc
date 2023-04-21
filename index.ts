@@ -38,7 +38,7 @@ console.log(`🎄 AOC ${c.bold(c.red(`${choice('day', c.green(args.day))} ${choi
 
 const input = await getInput(args.year, args.day)
 
-function doStuff([func, input, output]: [Challenge, string, any]): [boolean, string] {
+function render([func, input, output]: [Challenge, string, any]): [boolean, string] {
     const result = func(input)
     const short = input.split('\n')
     let newInput = short[0]
@@ -48,7 +48,7 @@ function doStuff([func, input, output]: [Challenge, string, any]): [boolean, str
 }
 
 let newTest: {
-    [key: string]: | (() => ReturnType<typeof doStuff> | (() => any))[]
+    [key: string]: | (() => ReturnType<typeof render> | (() => any))[]
 } = {}
 
 const path = `./${args.year.toString().substring(2)}/${args.day}.ts`
@@ -59,11 +59,11 @@ if (base.tests && args.test) {
     base.tests.forEach(([func, input, output]) => {
         if (Array.isArray(func)) func.forEach(subFun => {
             if (!newTest[subFun.name]) newTest[subFun.name] = []
-            newTest[subFun.name].push(() => doStuff([subFun, input, output]))
+            newTest[subFun.name].push(() => render([subFun, input, output]))
         })
         else {
             if (!newTest[func.name]) newTest[func.name] = []
-            newTest[func.name].push(() => doStuff([func, input, output]))
+            newTest[func.name].push(() => render([func, input, output]))
         }
     })
 }
@@ -75,23 +75,20 @@ if (!args.long) Object.entries(base).forEach(([k, v]) => {
 })
 
 const startTime = performance.now()
-Promise.all(Object.entries(newTest).map(([k, v]) => {
-    let failed = false
-    console.log(`${k}:`)
-    v.forEach(fn => {
+for (let [k,v] of Object.entries(newTest)) {
+    console.log(`\n${c.bold(k)}:`)
+    for (let fn of v) {
         const tnow = performance.now()
-        if (failed) {
-            console.log(`   ⚠️  Stopped`)
-            return
-        }
         const res = fn()
-        if (typeof res == 'object') {
-            failed = res[0]
-            console.log(`   ${res[1]} ${c.gray(performance.now() - tnow)}`)
-        } else {
-            console.log(res)
+
+        if (typeof res == 'object') console.log(`   ${res[1]} ${c.gray((performance.now() - tnow).toFixed(2) + 'ms')}`)
+        else console.log(res)
+
+        if (res[0]) {
+            console.log(`   ⚠️ Stopped`)
+            break
         }
-    })
-})).then(() => {
-    console.log(`ran in ${c.gray(performance.now() - startTime)}`)
-})
+    }
+}
+
+console.log(`\nran in ${c.gray((performance.now() - startTime).toFixed(2) + 'ms')}`)
