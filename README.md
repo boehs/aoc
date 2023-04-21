@@ -9,6 +9,8 @@ bun install
 
 # Results
 
+Results for a given year. Presented in avg. ms. across № runs.
+
 ## 2022
 
 ```
