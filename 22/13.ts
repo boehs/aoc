@@ -51,21 +51,25 @@ const run = (one: packet, two: packet) => {
     }
 }
 
-export const one: Challenge = (input) => {
-    const list = input.split('\n\n').map(pair => pair.split('\n').map((t) => JSON.parse(t)) as [packet, packet])
-    return list.reduce((a, [one, two], i) => {
-        if(run(one, two)) return a+i+1
-        return a
-    }, 0)
-}
+export const one: Challenge = (input) => input
+    .split('\n\n')
+    .map(pair =>
+        pair.split('\n')
+            .map((t) => JSON.parse(t)) as [packet, packet]
+    )
+    .reduce((a, [one, two], i) => run(one, two) ? a + i + 1 : a, 0)
 
 const twoAddendum = `
 [[2]]
 [[6]]`
 
 export const two: Challenge = (input) => {
-    const list = (input+twoAddendum).split('\n').filter(v => v != '').map((t) => JSON.parse(t)) as packet[]
-    const res = list.sort(run).reverse()
+    const res = (input + twoAddendum)
+        .split('\n')
+        .filter(v => v != '')
+        .map((t) => JSON.parse(t) as packet)
+        .sort(run)
+        .reverse()
     const first = res.findIndex(v => v[0] && v[0][0] == 2)
     const second = res.findIndex(v => v[0] && v[0][0] == 6)
     return (first + 1) * (second + 1)

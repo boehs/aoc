@@ -12,7 +12,7 @@
  */
 
 import { Challenge, Tests } from "~/types"
-import { cord , directions } from "~/utils/constants"
+import { cord, directions } from "~/utils/constants"
 import { Matrix, direction2cord } from "~/utils/matrix"
 import logUpdate from 'log-update';
 

@@ -1,5 +1,21 @@
+/**
+ * @remarks
+ * so my initial solution just wasn't working.
+ * I have no idea *why*, the renders looked fine,
+ * in retrospect I should have diffed it,
+ * but regardless this one is much better.
+ * 
+ * It was pretty slow, ~180ms, little changes brought it down 8x
+ * - I changed the while loops to a dead simple "while (true)"
+ * - I removed the distributed undef guards and put them in one place (l41)
+ * - I changed `delete xx` to setting to undefined (70ms)
+ * - I treated air as "undefined" and removed the includes check, which shaved 60ms off 🤯
+ * Finally we have a creamy 27ms runtime!
+ */
+
 import { Challenge, Tests } from "~/types"
 import { cord } from "~/utils/constants"
+import { scene } from "~/utils/scene"
 
 const sample = `498,4 -> 498,6 -> 496,6
 503,4 -> 502,4 -> 502,9 -> 494,9`
@@ -22,10 +38,10 @@ const run = (input: string, part: number) => {
         maxY += 2;
     }
 
-    const scene: { [key: number]: { [key: number]: string } } = {}
+    const scene: scene = {}
 
     for (let x = 0; x <= maxX; x++) {
-        if (!scene[x]) scene[x] = {}
+        scene[x] = {}
         if (part == 2) scene[x][maxY] = "#";
     }
 
