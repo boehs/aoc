@@ -1,4 +1,4 @@
-import { Base, Challenge } from '~/runner/types'
+import { Base, Challenge } from 'baocr'
 import { copyFile } from 'node:fs/promises'
 import c from 'picocolors'
 import { possibilities } from './greetings'

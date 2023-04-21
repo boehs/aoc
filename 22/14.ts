@@ -13,7 +13,7 @@
  * Finally we have a creamy 27ms runtime!
  */
 
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 import { cord } from "~/utils/constants"
 import { scene } from "~/utils/scene"
 

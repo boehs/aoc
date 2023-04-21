@@ -1,5 +1,5 @@
 import { readdir } from "fs/promises"
-import { Base } from "~/runner/types";
+import { Base } from "baocr";
 import { getInput } from "./helpers";
 import c from 'picocolors'
 import { possibilities } from "./greetings";

@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 import { alphabet } from '~/utils/constants'
 
 const sample = `vJrwpWtwJgWrhcsFMMfFFhFp

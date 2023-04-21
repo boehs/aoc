@@ -4,7 +4,7 @@
  * @date 7/12/22
  */
 
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 
 const sample = `$ cd /
 $ ls

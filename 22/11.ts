@@ -6,7 +6,7 @@
  * @name Monkey in the Middle
  */
 
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 
 const sample = `Monkey 0:
 Starting items: 79, 98

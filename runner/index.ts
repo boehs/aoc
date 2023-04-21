@@ -2,6 +2,7 @@
 import yargs from 'yargs'
 import { day } from './lib/dayRunner'
 import all from './lib/all'
+export * from './types'
 
 const now = new Date()
 

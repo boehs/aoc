@@ -11,7 +11,7 @@
  * a breadth-first is fine.
  */
 
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 import { cord, directions } from "~/utils/constants"
 import { Matrix, direction2cord } from "~/utils/matrix"
 import logUpdate from '~/runner/node_modules/log-update';

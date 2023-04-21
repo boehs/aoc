@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 
 const sample = `[1,1,3,1,1]
 [1,1,5,1,1]

@@ -6,6 +6,6 @@
     "bun-types": "^0.5.0"
   },
   "dependencies": {
-    "bacor": "link:baocr"
+    "baocr": "link:baocr"
   }
 }

@@ -8,7 +8,7 @@
  * Only change between easy and hard today was the subsequent unique charecters constant, from 4 to 14.
  */
 
-import { Challenge, Tests } from "~/runner/types"
+import { Challenge, Tests } from "baocr"
 
 const samples = ['mjqjpqmgbljsphdztnvjfqwrcgsmlb', 'bvwbjplbgvbhsrlpgdmjqwftvncz', 'nppdvjthqldpwncqszvftbrmjlhg', 'nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', 'zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw']
 const easySolutions = [7, 5, 6, 10, 11]

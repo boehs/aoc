@@ -12,7 +12,7 @@ AOC_SESSION=
 For each day, create a file: `YY/DD.ts`
 
 ```ts
-import { Challenge, Tests } from "baocr/types"
+import { Challenge, Tests } from "baocr"
 
 // Your solutions will be tested against this
 const sample = ``
