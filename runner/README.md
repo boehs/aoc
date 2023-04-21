@@ -1,4 +1,4 @@
-# (Bad|Bun|Boehs) AOC Runner
+# (Bad|Bun|Boehs) AOC Runner ([BAOCR](https://www.npmjs.com/package/baocr))
 
 It's actually mediocre. In your project's root, create a `.env` file with
 
@@ -12,7 +12,7 @@ AOC_SESSION=
 ### Default
 
 ```
-BAOCR [year] [day]
+baocr [year] [day]
 
 Run a given AOC
 
@@ -31,7 +31,7 @@ Options:
 ### All
 
 ```
-BAOCR all [year]
+baocr all [year]
 
 Run all the AOCs
 

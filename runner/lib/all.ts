@@ -1,5 +1,4 @@
 import { readdir } from "fs/promises"
-import {fileURLToPath} from 'url';
 import { Base } from "~/runner/types";
 import { getInput } from "./helpers";
 import c from 'picocolors'
@@ -15,7 +14,7 @@ const interleave = ([ x, ...xs ], ys = []) =>
 export default async function all(year: number, n: number) {
 
     const res: { [day: number]: { [part: string]: number[] } } = {}
-    const dp = './' + year.toString().substring(2)
+    const dp = process.cwd() + '/' + year.toString().substring(2)
     const dir = await readdir(dp)
     for (let file of dir) {
         const base: Base = await import(dp + '/' + file)
@@ -35,7 +34,7 @@ export default async function all(year: number, n: number) {
     const columns = [...new Set(Object.values(res).flatMap(day => Object.keys(day))),'=sum']
 
     const choice = possibilities[Math.floor(Math.random() * possibilities.length)];
-    console.log(`🎄 AOC ${c.bold(c.red(`${choice('year', c.green(year))} ${choice('day', c.green(Object.keys(res)[0]+'..'+Object.keys(res)[Object.keys(res).length-1]))}`))} ${c.gray(`№=${n}`)}`)
+    console.log(`🎄 AOC ${c.bold(c.red(`${choice('year', c.green(year))} ${choice('days', c.green(Object.keys(res)[0]+'..'+Object.keys(res)[Object.keys(res).length-1]))}`))} ${c.gray(`№=${n}`)}`)
 
     let avges = Object.fromEntries(Object.entries(res).map(([rn,day]) => {
         const davg = Array.from({...Object.values(day).map(part => (part.reduce((a,b) => a+b,0)/n)), length: columns.length-1 })

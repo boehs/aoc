@@ -6,7 +6,7 @@ import all from './lib/all'
 const now = new Date()
 
 const y = await yargs(process.argv.slice(2))
-    .scriptName('BAOCR')
+    .scriptName('baocr')
     .command('* [year] [day]', 'Run a given AOC', (yargs) => yargs
         .positional('year', {
             type: 'number',
