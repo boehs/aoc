@@ -34,29 +34,22 @@ export const one = (input: string, checkY: number = 2000000) => {
          */
         const i = Math.abs(sx - bx) + Math.abs(sy - by)
 
-        let queue: cord | undefined
-        let x = sx - i, y = sy
-        if (checkY > y) {
-            while (y != sy + i + 1) {
-                if (y == checkY) queue = [x, y]
-                x++
-                y++
+        let x = sx - i, y = sy, i2 = 0
+        while (true) {
+            if (y == checkY) {
+                const to = sx + (sx - x)
+                while (true) {
+                    scene.add(x)
+                    if (x == to) break
+                    x++
+                }
+                break
             }
-        } else {
-            while (y != sy - i - 1) {
-                if (y == checkY) queue = [x, y]
-                x++
-                y--
-            }
-        }
-        if (queue) {
-            [x, y] = queue
-            const to = sx + (sx - x)
-            while (true) {
-                scene.add(x)
-                if (x == to) break
-                x++
-            }
+            if (i2 == i) break
+            x++
+            i2++
+            if (checkY > y) y++
+            else y--
         }
     })
 
@@ -66,7 +59,6 @@ export const one = (input: string, checkY: number = 2000000) => {
             .map(cluster => `${cluster[2]},${cluster[3]}`)
     )].length
     return [...scene].length - beacons
-
 }
 
 export const tests: Tests = [
