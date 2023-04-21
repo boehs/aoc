@@ -17,12 +17,14 @@ Sensor at x=16, y=7: closest beacon is at x=15, y=3
 Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3`
 
+const diff = (a, b) => a > b ? a - b : b - a
+
 export const one = (input: string, checkY: number = 2000000) => {
     if (checkY == 2000000) return
     const parsed = input
         .split('\n')
         .map(l =>
-            l.replaceAll(/[^0-9=]/g, '')
+            l.replaceAll(/[^-0-9=]/g, '')
                 .split('=')
                 .filter(v => !(v == ""))
                 .map(Number)
@@ -30,57 +32,56 @@ export const one = (input: string, checkY: number = 2000000) => {
 
     const scene: scene = {}
 
-    parsed.forEach((group,it) => {
+    parsed.forEach((group, n) => {
         const [sx, sy, bx, by] = group
-        let i = 1, done = false
-        while (!done) {
-            const queue: cord[] = []
-            let x = sx - i, y = sy
-            while (y != sy + i + 1) {
-                if (y == checkY) {
-                    if (!scene[x]) scene[x] = {}
-                    scene[x][y] = '#'
-                }
-                queue.push([x, y])
-                if (x == bx && y == by) done = true
-                x++
-                y++
+
+        /**
+         * Manhattan distance is the sum of the absolute values of the horizontal and the vertical distance
+         */
+        const i = diff(sx, bx) + diff(sy, by)
+
+        const queue: cord[] = []
+        let x = sx - i, y = sy
+        while (y != sy + i + 1) {
+            if (y == checkY) {
+                if (!scene[x]) scene[x] = {}
+                scene[x][y] = '#'
             }
-            x = sx - i, y = sy
-            while (y != sy - i - 1) {
-                if (y == checkY) {
-                    if (!scene[x]) scene[x] = {}
-                    scene[x][y] = '#'
-                }
-                queue.push([x, y])
-                if (x == bx && y == by) done = true
-                x++
-                y--
-            }
-            queue.forEach(cord => {
-                [x, y] = cord
-                const to = sx + (sx - x)
-                while (true) {
-                    if (y == checkY) {
-                        if (!scene[x]) scene[x] = {}
-                        scene[x][y] = '#'
-                    }
-                    if (x == bx && y == by) done = true
-                    if (x == to) break
-                    x++
-                }
-            })
-            i++
+            queue.push([x, y])
+            x++
+            y++
         }
+        x = sx - i, y = sy
+        while (y != sy - i - 1) {
+            if (y == checkY) {
+                if (!scene[x]) scene[x] = {}
+                scene[x][y] = '#'
+            }
+            queue.push([x, y])
+            x++
+            y--
+        }
+        queue.forEach(cord => {
+            [x, y] = cord
+            const to = sx + (sx - x)
+            while (true) {
+                if (y == checkY) {
+                    if (!scene[x]) scene[x] = {}
+                    scene[x][y] = '#'
+                }
+                if (x == to) break
+                x++
+            }
+        })
     })
-    
+
     const base = Object.entries(scene).filter(column => column[1][checkY] != undefined).length
     const beacons = [...new Set(
         parsed
             .filter(cluster => cluster[3] == checkY)
             .map(cluster => `${cluster[2]},${cluster[3]}`)
     )].length
-    return base-beacons
+    return base - beacons
 
 }
 
