@@ -1,5 +1,4 @@
 import { Tests } from "~/types"
-import { cord } from "~/utils/constants"
 
 const sample = `Sensor at x=2, y=18: closest beacon is at x=-2, y=15
 Sensor at x=9, y=16: closest beacon is at x=10, y=16
@@ -34,8 +33,8 @@ export const one = (input: string, checkY: number = 2000000) => {
          */
         const i = Math.abs(sx - bx) + Math.abs(sy - by)
 
-        let x = sx - i, y = sy, i2 = 0
-        while (true) {
+        let x = sx - i, y = sy
+        while (x != sx) {
             if (y == checkY) {
                 const to = sx + (sx - x)
                 while (true) {
@@ -45,9 +44,7 @@ export const one = (input: string, checkY: number = 2000000) => {
                 }
                 break
             }
-            if (i2 == i) break
             x++
-            i2++
             if (checkY > y) y++
             else y--
         }
