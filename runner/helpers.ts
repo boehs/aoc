@@ -1,4 +1,6 @@
 import { access, readFile, writeFile } from "fs/promises";
+import {fileURLToPath} from 'url';
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export async function fileExists(filename) {
     try {
@@ -14,12 +16,12 @@ export async function fileExists(filename) {
 }
 
 export async function getInput(year: number, day: number) {
-    const path = `./inputs/${year}/${day}.txt`
+    const path = `${__dirname}/../inputs/${year}/${day}.txt`
     if (await fileExists(path)) {
         return await readFile(path, 'utf-8')
     } else {
         console.log(`⚠️ No Cached AOC!`)
-        const inputFetch = await fetch(`https://adventofcode.com/${year}/day/${year}/input`,{
+        const inputFetch = await fetch(`https://adventofcode.com/${year}/day/${day}/input`,{
             headers: {
                 cookie: `session=${process.env.AOC_SESSION}`
             }
