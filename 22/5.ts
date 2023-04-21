@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/types"
+import { Challenge, Tests } from "~/runner/types"
 import { Matrix } from "~/utils/matrix"
 
 const sample = `    [D]    

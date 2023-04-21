@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/types"
+import { Challenge, Tests } from "~/runner/types"
 
 const sample = `2-4,6-8
 2-3,4-5

@@ -1,8 +1,7 @@
 import { readdir } from "fs/promises"
 import {fileURLToPath} from 'url';
-import { Base } from "~/types";
+import { Base } from "~/runner/types";
 import { getInput } from "./helpers";
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
 import c from 'picocolors'
 import { possibilities } from "./greetings";
 
@@ -16,7 +15,7 @@ const interleave = ([ x, ...xs ], ys = []) =>
 export default async function all(year: number, n: number) {
 
     const res: { [day: number]: { [part: string]: number[] } } = {}
-    const dp = __dirname + '/../' + year.toString().substring(2)
+    const dp = './' + year.toString().substring(2)
     const dir = await readdir(dp)
     for (let file of dir) {
         const base: Base = await import(dp + '/' + file)

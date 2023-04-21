@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import yargs from 'yargs'
-import { day } from './runner/dayRunner'
-import all from './runner/all'
+import { day } from './lib/dayRunner'
+import all from './lib/all'
 
 const now = new Date()
 

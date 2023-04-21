@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/types"
+import { Challenge, Tests } from "~/runner/types"
 import { cord } from "~/utils/constants"
 
 const sample = `R 4

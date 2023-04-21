@@ -1,8 +1,8 @@
-import { Base, Challenge } from '~/types'
+import { Base, Challenge } from '~/runner/types'
 import { copyFile } from 'node:fs/promises'
 import c from 'picocolors'
-import { possibilities } from '~/runner/greetings'
-import { fileExists, getInput } from '~/runner/helpers'
+import { possibilities } from './greetings'
+import { fileExists, getInput } from './helpers'
 import {fileURLToPath} from 'url';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -10,7 +10,6 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 export async function day(day: number, year: number, test: boolean, long: boolean) {
     const choice = possibilities[Math.floor(Math.random() * possibilities.length)];
     console.log(`🎄 AOC ${c.bold(c.red(`${choice('day', c.green(day))} ${choice('year', c.green(year))}`))}`)
-    
     const input = await getInput(year, day)
     
     function render([func, input, output]: [Challenge, string, any]): [boolean, string] {
@@ -26,8 +25,8 @@ export async function day(day: number, year: number, test: boolean, long: boolea
         [key: string]: | (() => ReturnType<typeof render> | (() => any))[]
     } = {}
     
-    const path = `${__dirname}/../${year.toString().substring(2)}/${day}.ts`
-    if (!await fileExists(path)) await copyFile(__dirname + '/../template.ts', path)
+    const path = process.cwd() + `/${year.toString().substring(2)}/${day}.ts`
+    if (!await fileExists(path)) await copyFile(__dirname + '../template.ts', path)
     const base: Base = await import(path)
     
     if (base.tests && test) {

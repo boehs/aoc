@@ -1,4 +1,4 @@
-import { Challenge, Tests } from "~/types"
+import { Challenge, Tests } from "~/runner/types"
 
 export const one: Challenge = (input) => {
     return input.split('\n').reduce(([cycle, reg, sum], statement) => {
