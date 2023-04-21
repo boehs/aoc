@@ -1,6 +1,5 @@
-import { Challenge, Tests } from "~/types"
+import { Tests } from "~/types"
 import { cord } from "~/utils/constants"
-import { scene } from "~/utils/scene"
 
 const sample = `Sensor at x=2, y=18: closest beacon is at x=-2, y=15
 Sensor at x=9, y=16: closest beacon is at x=10, y=16
@@ -17,70 +16,55 @@ Sensor at x=16, y=7: closest beacon is at x=15, y=3
 Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3`
 
-const diff = (a, b) => a > b ? a - b : b - a
-
 export const one = (input: string, checkY: number = 2000000) => {
     const parsed = input
         .split('\n')
         .map(l =>
             l.replaceAll(/[^-0-9=]/g, '')
                 .split('=')
-                .filter(v => !(v == ""))
+                .filter(v => v != "")
                 .map(Number)
         )
 
-    const scene: scene = {}
+    let scene = new Set<number>()
 
-    parsed.forEach((group, n) => {
-        const [sx, sy, bx, by] = group
-
+    parsed.forEach(([sx, sy, bx, by]) => {
         /**
          * Manhattan distance is the sum of the absolute values of the horizontal and the vertical distance
          */
-        const i = diff(sx, bx) + diff(sy, by)
+        const i = Math.abs(sx - bx) + Math.abs(sy - by)
 
-        const queue: cord[] = []
+        let queue: cord | undefined
         let x = sx - i, y = sy
         while (y != sy + i + 1) {
-            if (y == checkY) {
-                if (!scene[x]) scene[x] = {}
-                scene[x][y] = '#'
-                queue.push([x, y])
-            }
+            if (y == checkY) queue = [x, y]
             x++
             y++
         }
         x = sx - i, y = sy
         while (y != sy - i - 1) {
-            if (y == checkY) {
-                if (!scene[x]) scene[x] = {}
-                scene[x][y] = '#'
-                queue.push([x, y])
-            }
+            if (y == checkY) queue = [x, y]
             x++
             y--
         }
-        queue.forEach(cord => {
-            [x, y] = cord
+        if (queue) {
+            [x, y] = queue
             const to = sx + (sx - x)
             while (true) {
-                if (y == checkY) {
-                    if (!scene[x]) scene[x] = {}
-                    scene[x][y] = '#'
-                }
+                scene.add(x)
                 if (x == to) break
                 x++
             }
-        })
+        }
     })
 
-    const base = Object.entries(scene).filter(column => column[1][checkY] != undefined).length
     const beacons = [...new Set(
         parsed
             .filter(cluster => cluster[3] == checkY)
             .map(cluster => `${cluster[2]},${cluster[3]}`)
     )].length
-    return base - beacons
+    console.log(performance.now())
+    return [...scene].length - beacons
 
 }
 
