@@ -32,7 +32,6 @@ export const one = (input: string, checkY: number = 2000000) => {
          * Manhattan distance is the sum of the absolute values of the horizontal and the vertical distance
          */
         const i = Math.abs(sx - bx) + Math.abs(sy - by)
-
         let x = sx - i, y = sy
         while (x != sx) {
             if (y == checkY) {

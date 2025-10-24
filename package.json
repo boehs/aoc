@@ -6,6 +6,10 @@
     "bun-types": "^0.5.0"
   },
   "dependencies": {
-    "baocr": "link:baocr"
+    "baocr": "file:./runner",
+    "log-update": "^7.0.1"
+  },
+  "scripts": {
+    "run": "./runner/index.ts"
   }
 }
